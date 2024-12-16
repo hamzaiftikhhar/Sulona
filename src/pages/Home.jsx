@@ -1,4 +1,4 @@
-import Footer from "../component/footer/footer";
+import Footer from "../component/Footer/Footer";
 import HomeMain from "../component/home/HomeMain";
 import React from "react";
 

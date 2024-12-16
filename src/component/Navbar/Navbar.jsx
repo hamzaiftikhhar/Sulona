@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "phosphor-react";
 import SlidingCart from "./SlidingCart";
 import "./Navbar.css";
+import AuthForm from "../Auth/Auth";
 
 function Navbar() {
   const [showCart, setShowCart] = useState(false);
@@ -66,6 +67,11 @@ function Navigations({ toggleShowCart }) {
         <span></span>
         <span></span>
       </div>
+      <div className="auth-container">
+  <NavLink to="/login" className="auth-link">Login</NavLink>
+  <span className="auth-divider">|</span>
+  <NavLink to="/signup" className="auth-link">SignUp</NavLink>
+</div>
       <div className="nav-secondary">
         <CartButton toggleShowCart={toggleShowCart} />
       </div>
