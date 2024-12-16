@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Auth from "./component/Auth/Auth";
 import Navbar from "./component/Navbar/Navbar";
 import { Toaster } from "react-hot-toast";
+import Seller from "./component/seller/Seller";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Auth type="login" />} />
       <Route path="/signup" element={<Auth type="signup" />} />{" "}
+      <Route path="/Seller" element={<Seller type="Seller" />} />
     </Route>
   )
 );

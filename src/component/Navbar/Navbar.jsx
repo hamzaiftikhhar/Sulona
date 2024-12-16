@@ -61,6 +61,9 @@ function Navigations({ toggleShowCart }) {
         <li className="nav-link">
           <NavLink to="/explore/all">Explore All</NavLink>
         </li>
+        <li className="nav-link">
+          <NavLink to="/Seller">Add Product</NavLink>
+        </li>
       </ul>
       <div className="nav-secondary_btn" onClick={handleOpenNavigation}>
         <span></span>
