@@ -61,14 +61,14 @@ const Seller = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form-wrapper">
-        <div className="auth-header">
+    <div className="seller-container">
+      <div className="seller-form-wrapper">
+        <div className="seller-header">
           <h2>Seller Dashboard</h2>
           <p>Manage your products here</p>
         </div>
 
-        <div className="auth-form">
+        <div className="seller-form">
           <div className="form-group">
             <label htmlFor="name">Product Name</label>
             <input
@@ -114,8 +114,8 @@ const Seller = () => {
           </button>
         </div>
 
-        <div className="auth-form">
-          <h2 className="auth-header">My Products</h2>
+        <div className="seller-form">
+          <h2 className="seller-header">My Products</h2>
           <div className="seller-dashboard__products-table">
             <table>
               <thead>
