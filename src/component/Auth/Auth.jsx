@@ -1,22 +1,48 @@
-// Auth.jsx
+// frontend/src/components/Auth/Auth.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import axiosInstance from '../../api/axiosConfig';
 import './Auth.css';
 
 const Auth = ({ type = 'login' }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: ''
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your authentication logic here
-    
-    // After successful authentication, navigate to home
-    navigate('/');
+    setError('');
+    setLoading(true);
+
+    // Validate passwords match for signup
+    if (type === 'signup' && formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const endpoint = type === 'login' ? '/api/auth/login' : '/api/auth/signup';
+      const response = await axiosInstance.post(endpoint, {
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Handle successful auth
+      login(response.data.user, response.data.token);
+      navigate('/');
+    } catch (error) {
+      setError(error.response?.data?.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,6 +56,8 @@ const Auth = ({ type = 'login' }) => {
               : 'Please fill in the information below'}
           </p>
         </div>
+
+        {error && <div className="error-message">{error}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -73,14 +101,12 @@ const Auth = ({ type = 'login' }) => {
             </div>
           )}
 
-          {type === 'login' && (
-            <div className="forgot-password">
-              <button type="button">Forgot password?</button>
-            </div>
-          )}
-
-          <button type="submit" className="submit-button">
-            {type === 'login' ? 'Sign In' : 'Create Account'}
+          <button 
+            type="submit" 
+            className="submit-button"
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : (type === 'login' ? 'Sign In' : 'Create Account')}
           </button>
 
           <div className="auth-switch">
@@ -98,20 +124,3 @@ const Auth = ({ type = 'login' }) => {
 };
 
 export default Auth;
-
-// Navbar.jsx (Update your existing Navbar component)
-const Navbar = () => {
-  // ... your existing navbar code ...
-  
-  return (
-    <nav className="nav">
-      {/* ... other navbar items ... */}
-      
-      <div className="auth-container">
-        <Link to="/login" className="auth-link">Login</Link>
-        <span className="auth-divider">|</span>
-        <Link to="/signup" className="auth-link">SignUp</Link>
-      </div>
-    </nav>
-  );
-};

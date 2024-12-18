@@ -5,9 +5,12 @@ import { ShoppingCart } from "phosphor-react";
 import SlidingCart from "./SlidingCart";
 import "./Navbar.css";
 import AuthForm from "../Auth/Auth";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
   const [showCart, setShowCart] = useState(false);
+  const { user, logout } = useAuth();
+
 
   function toggleShowCart() {
     setShowCart(!showCart);
@@ -38,6 +41,7 @@ function CartButton({ toggleShowCart }) {
 
 function Navigations({ toggleShowCart }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   function handleOpenNavigation() {
     setIsNavOpen(!isNavOpen);
@@ -71,10 +75,25 @@ function Navigations({ toggleShowCart }) {
         <span></span>
       </div>
       <div className="auth-container">
-  <NavLink to="/login" className="auth-link">Login</NavLink>
-  <span className="auth-divider">|</span>
-  <NavLink to="/signup" className="auth-link">SignUp</NavLink>
-</div>
+        {user ? (
+          <>
+            <span>{user.email}</span>
+            <button onClick={logout} className="auth-link">
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="auth-link">
+              Login
+            </Link>
+            <span className="auth-divider">|</span>
+            <Link to="/signup" className="auth-link">
+              SignUp
+            </Link>
+          </>
+        )}
+      </div>
       <div className="nav-secondary">
         <CartButton toggleShowCart={toggleShowCart} />
       </div>
