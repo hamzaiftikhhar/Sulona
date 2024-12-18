@@ -26,10 +26,10 @@ app.use(express.json());
 
 // Request logging
 app.use((req, res, next) => {
-  console.log('Incoming request:', {
+  console.log('📡Incoming request:', {
     method: req.method,
-    path: req.path,
-    origin: req.get('origin'),
+    fullPath: req.originalUrl,  // This shows the complete path
+    body: req.body,
     headers: req.headers
   });
   next();
@@ -45,6 +45,16 @@ mongoose.connect('mongodb://localhost:27017/Soluna', {
   console.log('Connected to database:', mongoose.connection.db.databaseName);
 })
 .catch((err) => console.error('MongoDB connection error:', err));
+
+// Add this before your routes in server.js
+app.use((req, res, next) => {
+  console.log('🔍 Route Debug:', {
+    method: req.method,
+    path: req.path,
+    originalUrl: req.originalUrl
+  });
+  next();
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
