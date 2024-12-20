@@ -81,70 +81,72 @@ const Seller = () => {
         </div>
 
         <div className="seller-form">
-          <div className="form-group">
-            <label htmlFor="name">Product Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Product Name"
-              value={newProduct.name}
-              onChange={handleProductChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="description">Product Description</label>
-            <textarea
-              id="description"
-              name="description"
-              placeholder="Product Description"
-              value={newProduct.description}
-              onChange={handleProductChange}
-            ></textarea>
-          </div>
-          <div className="form-group">
-            <label htmlFor="price">Product Price</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              placeholder="Product Price"
-              value={newProduct.price}
-              onChange={handleProductChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="category">Category</label>
-            <input
-              type="text"
-              id="category"
-              name="category"
-              placeholder="Product Category"
-              value={newProduct.category}
-              onChange={handleProductChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="quantity">Quantity</label>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              placeholder="Available Quantity"
-              value={newProduct.quantity}
-              onChange={handleProductChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="imagePath">Image Path</label>
-            <input
-              type="text"
-              id="imagePath"
-              name="imagePath"
-              placeholder="Path to the image"
-              value={newProduct.imagePath}
-              onChange={handleProductChange}
-            />
+          <div className="form-fields-container">
+            <div className="form-group">
+              <label htmlFor="name">Product Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Product Name"
+                value={newProduct.name}
+                onChange={handleProductChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="description">Product Description</label>
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Product Description"
+                value={newProduct.description}
+                onChange={handleProductChange}
+              ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="price">Product Price</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                placeholder="Product Price"
+                value={newProduct.price}
+                onChange={handleProductChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="category">Category</label>
+              <input
+                type="text"
+                id="category"
+                name="category"
+                placeholder="Product Category"
+                value={newProduct.category}
+                onChange={handleProductChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="quantity">Quantity</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                placeholder="Available Quantity"
+                value={newProduct.quantity}
+                onChange={handleProductChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="imagePath">Image Path</label>
+              <input
+                type="text"
+                id="imagePath"
+                name="imagePath"
+                placeholder="Path to the image"
+                value={newProduct.imagePath}
+                onChange={handleProductChange}
+              />
+            </div>
           </div>
           <button className="submit-button" onClick={handleProductCreate}>
             Create Product
