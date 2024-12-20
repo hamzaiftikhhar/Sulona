@@ -78,9 +78,11 @@ function Navigations({ toggleShowCart }) {
         {user ? (
           <>
             <span>{user.email}</span>
-            <button onClick={logout} className="auth-link">
+            <span className="auth-divider">|</span>
+
+            <Link type="submit" onClick={logout} className="nav-link">
               Logout
-            </button>
+            </Link>
           </>
         ) : (
           <>

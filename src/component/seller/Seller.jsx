@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './Seller.css';
+import React, { useState } from "react";
+import axios from "axios";
+import "./Seller.css";
 
 const Seller = () => {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     price: 0,
+    category: "",
+    quantity: 0,
     image: null,
   });
 
   // Fetch user's products
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('/api/products');
+      const response = await axios.get("/api/products");
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -32,17 +34,27 @@ const Seller = () => {
 
   const handleProductCreate = async () => {
     try {
-      const formData = new FormData();
-      formData.append('name', newProduct.name);
-      formData.append('description', newProduct.description);
-      formData.append('price', newProduct.price);
-      formData.append('image', newProduct.image);
+      const productData = {
+        name: newProduct.name,
+        description: newProduct.description,
+        price: newProduct.price,
+        category: newProduct.category,
+        quantity: newProduct.quantity,
+        imagePath: newProduct.imagePath, // Store the image path here
+      };
 
-      await axios.post('/api/products', formData);
-      setNewProduct({ name: '', description: '', price: 0, image: null });
+      await axios.post("/api/products", productData);
+      setNewProduct({
+        name: "",
+        description: "",
+        price: 0,
+        category: "",
+        quantity: 0,
+        imagePath: "",
+      });
       fetchProducts();
     } catch (error) {
-      console.error('Error creating product:', error);
+      console.error("Error creating product:", error);
     }
   };
 
@@ -56,7 +68,7 @@ const Seller = () => {
       await axios.delete(`/api/products/${productId}`);
       fetchProducts();
     } catch (error) {
-      console.error('Error deleting product:', error);
+      console.error("Error deleting product:", error);
     }
   };
 
@@ -102,11 +114,36 @@ const Seller = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="image">Product Image</label>
+            <label htmlFor="category">Category</label>
             <input
-              type="file"
-              id="image"
-              onChange={handleImageUpload}
+              type="text"
+              id="category"
+              name="category"
+              placeholder="Product Category"
+              value={newProduct.category}
+              onChange={handleProductChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="quantity">Quantity</label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              placeholder="Available Quantity"
+              value={newProduct.quantity}
+              onChange={handleProductChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="imagePath">Image Path</label>
+            <input
+              type="text"
+              id="imagePath"
+              name="imagePath"
+              placeholder="Path to the image"
+              value={newProduct.imagePath}
+              onChange={handleProductChange}
             />
           </div>
           <button className="submit-button" onClick={handleProductCreate}>
@@ -123,6 +160,8 @@ const Seller = () => {
                   <th>Name</th>
                   <th>Description</th>
                   <th>Price</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -132,6 +171,8 @@ const Seller = () => {
                     <td>{product.name}</td>
                     <td>{product.description}</td>
                     <td>${product.price}</td>
+                    <td>{product.category}</td>
+                    <td>{product.quantity}</td>
                     <td>
                       <button
                         className="toggle-button"
