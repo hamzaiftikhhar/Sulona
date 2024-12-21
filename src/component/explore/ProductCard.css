@@ -81,3 +81,25 @@
 .product-card_price {
   font-size: 1.8rem;
 }
+.product-card_meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.add-cart_btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.product-stock {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.product-category {
+  color: #666;
+  margin-bottom: 0.5rem;
+}

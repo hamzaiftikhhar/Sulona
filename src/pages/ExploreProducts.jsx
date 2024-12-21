@@ -1,3 +1,4 @@
+// pages/ExploreProducts.jsx
 import { useEffect, useState } from "react";
 import ProductCard from "../component/explore/ProductCard";
 import fetchFromApi from "../utils/fetchFromApi";
@@ -9,17 +10,21 @@ import Shimmer from "../component/shimmer/Shimmer";
 
 function ExploreProduct() {
   const [products, setProducts] = useState([]);
-  const [priceFlter, setPriceFilter] = useState("default");
+  const [priceFilter, setPriceFilter] = useState("default");
   const [checkBoxState, setCheckBoxState] = useState({
-    men: false,
-    women: false,
+    electronics: false,
+    clothing: false,
+    books: false,
+    // Add other categories as needed
   });
   let { category } = useParams();
 
   useEffect(() => {
     let resetCheckBoxState = {
-      men: false,
-      women: false,
+      electronics: false,
+      clothing: false,
+      books: false,
+      // Reset other categories as needed
     };
     if (category === "all") {
       setCheckBoxState(resetCheckBoxState);
@@ -30,34 +35,29 @@ function ExploreProduct() {
 
   useEffect(() => {
     async function getData() {
-      let res = await fetchFromApi("products");
-      function getFilteredData() {
-        // if both men and women checkbox are not true than load both men's and women's clothing
-        // we are filtering this since the default request also provide result for category that we don't want
-        if (!checkBoxState.men && !checkBoxState.women) {
-          let filteredData = res.filter((product) => {
-            return (
-              product.category === "men's clothing" ||
-              product.category === "women's clothing"
-            );
-          });
-          return filteredData;
-        }
+      try {
+        let res = await fetchFromApi("api/products");
+        function getFilteredData() {
+          // If no category is selected, show all products
+          const selectedCategories = Object.entries(checkBoxState)
+            .filter(([_, isSelected]) => isSelected)
+            .map(([category]) => category);
 
-        let filteredData = res.filter((product) => {
-          if (checkBoxState.men && product.category === "men's clothing") {
-            return product;
-          } else if (
-            checkBoxState.women &&
-            product.category === "women's clothing"
-          ) {
-            return product;
+          if (selectedCategories.length === 0) {
+            return res;
           }
-        });
-        return filteredData;
+
+          // Filter products by selected categories
+          return res.filter((product) => 
+            selectedCategories.includes(product.category.toLowerCase())
+          );
+        }
+        setProducts(getFilteredData());
+        setPriceFilter("default");
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
       }
-      setProducts(getFilteredData());
-      setPriceFilter("default");
     }
     getData();
   }, [checkBoxState]);
@@ -87,7 +87,7 @@ function ExploreProduct() {
   return (
     <main className="product-main">
       <PriceFilter
-        priceFlter={priceFlter}
+        priceFilter={priceFilter}
         handlePriceFilter={handlePriceFilter}
       />
       <SelectCategory
@@ -104,7 +104,7 @@ function ExploreProduct() {
 function AllProducts({ products }) {
   let productCards = products.length ? (
     products?.map((product) => {
-      return <ProductCard product={product} key={product.id} />;
+      return <ProductCard product={product} key={product._id} />;
     })
   ) : (
     <Skeleton />

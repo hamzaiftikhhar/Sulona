@@ -1,3 +1,4 @@
+// Navbar/SlidingCart.jsx
 import { ShoppingCart, X } from "phosphor-react";
 import { Link } from "react-router-dom";
 import { useCartActions } from "../../store/Store";
@@ -33,60 +34,36 @@ function CartTop({ toggleShowCart }) {
     </div>
   );
 }
-
-function CartMain({ cart, addProductQuantity, removeFromCart }) {
-  const products = cart.map((product) => {
-    return (
-      <CartProducts
-        product={product}
-        addProductQuantity={addProductQuantity}
-        removeFromCart={removeFromCart}
-        key={product.id}
-      />
-    );
-  });
-
-  return (
-    <div className="cart-main_container">
-      {products.length < 1 ? (
-        <div style={{ textAlign: "center", fontSize: "1.6rem" }}>
-          Your cart is empty :({" "}
-        </div>
-      ) : (
-        products
-      )}
-    </div>
-  );
-}
-
 function CartProducts({ product, addProductQuantity, removeFromCart }) {
   function inputHandler(e) {
-    addProductQuantity(product.id, Number(e.target.value));
+    addProductQuantity(product._id, Number(e.target.value));
   }
 
   function removeProduct() {
-    removeFromCart(product.id);
+    removeFromCart(product._id);
     toast.error("Removed from Cart ");
   }
 
   return (
     <div className="cart-product">
-      <img src={product.image} />
+      <img src={product.imagePath} alt={product.name} />
       <div className="cart-product_info">
-        <h3>{product.title}</h3>
+        <h3>{product.name}</h3>
         <p>Category: {product.category}</p>
         <p className="qty">
           Qty:
           <input
             type="number"
-            value={product.qty}
+            value={product.quantity}
             onChange={inputHandler}
             id="qty"
+            min="1"
+            max="20"
           />
         </p>
       </div>
       <p className="cart-product_price">
-        ${(product.price * product.qty).toFixed(2)}
+        ${(product.price * product.quantity).toFixed(2)}
       </p>
       <span className="cart-product_x" onClick={removeProduct}>
         <X size="16px" />
@@ -95,9 +72,30 @@ function CartProducts({ product, addProductQuantity, removeFromCart }) {
   );
 }
 
+function CartMain({ cart, addProductQuantity, removeFromCart }) {
+  return (
+    <div className="cart-main_container">
+      {cart.length < 1 ? (
+        <div style={{ textAlign: "center", fontSize: "1.6rem" }}>
+          Your cart is empty :(
+        </div>
+      ) : (
+        cart.map((product) => (
+          <CartProducts
+            key={product._id}
+            product={product}
+            addProductQuantity={addProductQuantity}
+            removeFromCart={removeFromCart}
+          />
+        ))
+      )}
+    </div>
+  );
+}
+
 function CartCheckOut({ cart, toggleShowCart }) {
   const totalPrice = cart.reduce((accumulator, current) => {
-    return accumulator + current.price * current.qty;
+    return accumulator + current.price * current.quantity;
   }, 0);
 
   return (
@@ -110,5 +108,4 @@ function CartCheckOut({ cart, toggleShowCart }) {
     </div>
   );
 }
-
 export default SlidingCart;

@@ -243,7 +243,7 @@ const Seller = () => {
         <div className="seller-form">
           <div className="form-fields-container">
             <div className="form-group">
-              <label htmlFor="name">Product Name *</label>
+              <label htmlFor="name">Product Name</label>
               <input
                 type="text"
                 id="name"
@@ -259,7 +259,7 @@ const Seller = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Product Description *</label>
+              <label htmlFor="description">Product Description </label>
               <textarea
                 id="description"
                 name="description"
@@ -274,7 +274,7 @@ const Seller = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="price">Product Price ($) *</label>
+              <label htmlFor="price">Product Price ($) </label>
               <input
                 type="number"
                 id="price"
@@ -292,7 +292,7 @@ const Seller = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="category">Category *</label>
+              <label htmlFor="category">Category </label>
               <input
                 type="text"
                 id="category"
@@ -308,7 +308,7 @@ const Seller = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="quantity">Quantity *</label>
+              <label htmlFor="quantity">Quantity </label>
               <input
                 type="number"
                 id="quantity"
@@ -326,12 +326,12 @@ const Seller = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="imagePath">Image URL *</label>
+              <label htmlFor="imagePath">Image URL </label>
               <input
                 type="url"
                 id="imagePath"
                 name="imagePath"
-                placeholder="https://example.com/image.jpg"
+                placeholder="../../../images/team-item2.jpg"
                 value={newProduct.imagePath}
                 onChange={handleProductChange}
                 className={errors.imagePath ? "error" : ""}

@@ -1,15 +1,15 @@
 import { useCart } from "../../store/Store";
-
 import "./OrderSummary.css";
 
 function OrderSummary() {
-  let cart = useCart();
-  let allSoloProducts = cart.map((product) => {
-    return <SoloBill product={product} key={product.id} />;
-  });
+  const cart = useCart();
+  
+  const allSoloProducts = cart.map((product) => (
+    <SoloBill product={product} key={product._id} />
+  ));
 
-  let totalPrice = cart.reduce((acc, cur) => {
-    return acc + cur.qty * cur.price;
+  const totalPrice = cart.reduce((acc, cur) => {
+    return acc + (cur.quantity || 0) * cur.price;
   }, 0);
 
   return (
@@ -28,9 +28,9 @@ function SoloBill({ product }) {
   return (
     <div className="solo-bill">
       <p>
-        <b>{product.qty}</b> * <b>{product.title}</b>
+        <b>{product.quantity}</b> * <b>{product.name}</b>
       </p>
-      <span>${(product.qty * product.price).toFixed(2)}</span>
+      <span>${(product.quantity * product.price).toFixed(2)}</span>
     </div>
   );
 }

@@ -7,39 +7,42 @@ const useCartStore = create((set) => ({
       set((state) => {
         let newCartValue = [];
         let isAlreadyAdded = state.cart.some((product) => {
-          return product.id === addedProduct.id;
+          return product._id === addedProduct._id;
         });
+        
         if (isAlreadyAdded) {
           newCartValue = state.cart.map((product) => {
-            if (product.id === addedProduct.id) {
-              return { ...product, qty: product.qty + 1 };
+            if (product._id === addedProduct._id) {
+              return { ...product, quantity: product.quantity + 1 };
             }
             return product;
           });
         } else {
-          newCartValue = [...state.cart, { ...addedProduct, qty: 1 }];
+          newCartValue = [...state.cart, { ...addedProduct, quantity: 1 }];
         }
         return { cart: newCartValue };
       });
     },
+
     removeFromCart: (productId) => {
       set((state) => {
         let filteredCart = state.cart.filter(
-          (product) => product.id !== productId
+          (product) => product._id !== productId
         );
         return { cart: filteredCart };
       });
     },
-    addProductQuantity(id, newQty) {
+
+    addProductQuantity(_id, newQty) {
       if (newQty > 20) return;
       set((state) => {
         if (newQty < 0) {
-          state.action.removeFromCart(id);
+          state.action.removeFromCart(_id);
           return {};
         }
         let newCartValue = state.cart.map((product) => {
-          if (product.id === id) {
-            return { ...product, qty: newQty };
+          if (product._id === _id) {
+            return { ...product, quantity: newQty };
           }
           return product;
         });
@@ -49,7 +52,7 @@ const useCartStore = create((set) => ({
     },
 
     emptyCart() {
-      set(() => []);
+      set({ cart: [] }); 
     },
   },
 }));

@@ -1,3 +1,4 @@
+// Navbar/Navbar.jsx
 import { useState } from "react";
 import { useCart } from "../../store/Store";
 import { Link, NavLink } from "react-router-dom";
@@ -28,16 +29,17 @@ function CartButton({ toggleShowCart }) {
   const cart = useCart();
 
   const totalCartQty = cart.reduce((totalQty, current) => {
-    return totalQty + current.qty;
+    return totalQty + (current.quantity || 0); 
   }, 0);
 
   return (
     <span onClick={toggleShowCart} className="cart-icon">
       <ShoppingCart size={22} />
-      <div className="cart-counter">{totalCartQty}</div>
+      <div className="cart-counter">{totalCartQty || 0}</div>
     </span>
   );
 }
+
 
 function Navigations({ toggleShowCart }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -50,7 +52,7 @@ function Navigations({ toggleShowCart }) {
   return (
     <nav className={`nav container ${isNavOpen ? "nav-open" : ""}`}>
       <span className="brand-name">
-        <Link to="/">Ace Store</Link>
+        <Link to="/">SOLUNA</Link>
       </span>
       <ul className="nav-link_container">
         <li className="nav-link">
