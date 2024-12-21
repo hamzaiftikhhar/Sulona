@@ -12,6 +12,7 @@ const Seller = () => {
     type: "",
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [editingProductId, setEditingProductId] = useState(null);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -67,7 +68,7 @@ const Seller = () => {
       newErrors.quantity = "Quantity must be a whole number";
     }
 
-    // Image path validation (local string)
+    // Image path validation
     if (!newProduct.imagePath.trim()) {
       newErrors.imagePath = "Image path is required";
     } else if (!/^[a-zA-Z0-9_\-./]+$/.test(newProduct.imagePath)) {
@@ -93,13 +94,14 @@ const Seller = () => {
   const fetchProducts = async () => {
     try {
       const response = await axiosInstance.get("api/products");
-      // Ensure we have an array
       const productsData = Array.isArray(response.data) ? response.data : [];
       setProducts(productsData);
+      setIsLoading(false);
     } catch (error) {
       console.error("Fetch error:", error);
-      setProducts([]); // Reset to empty array on error
+      setProducts([]);
       showStatus("Error fetching products. Please try again.", "error");
+      setIsLoading(false);
     }
   };
 
@@ -107,7 +109,6 @@ const Seller = () => {
   const handleProductChange = (e) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -122,23 +123,22 @@ const Seller = () => {
     );
   };
 
-  // Handle product creation
-  const handleProductCreate = async () => {
+  // Handle form submission (create or update)
+  const handleSubmit = async () => {
     if (!validateForm()) {
       showStatus('Please fix the errors before submitting.', 'error');
       return;
     }
-  
+
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        showStatus('Please log in to create products.', 'error');
-        // Optionally redirect to login
+        showStatus('Please log in to manage products.', 'error');
         window.location.href = '/login';
         return;
       }
-  
+
       const productData = {
         name: newProduct.name.trim(),
         description: newProduct.description.trim(),
@@ -147,9 +147,18 @@ const Seller = () => {
         quantity: parseInt(newProduct.quantity),
         imagePath: newProduct.imagePath.trim(),
       };
-  
-      await axiosInstance.post("api/products", productData);
-      showStatus('Product created successfully!', 'success');
+
+      if (editingProductId) {
+        // Update existing product
+        await axiosInstance.put(`api/products/${editingProductId}`, productData);
+        showStatus('Product updated successfully!', 'success');
+      } else {
+        // Create new product
+        await axiosInstance.post("api/products", productData);
+        showStatus('Product created successfully!', 'success');
+      }
+
+      // Reset form and fetch updated products
       setNewProduct({
         name: "",
         description: "",
@@ -158,24 +167,24 @@ const Seller = () => {
         quantity: "",
         imagePath: "",
       });
+      setEditingProductId(null);
       fetchProducts();
     } catch (error) {
-      console.error('Create error:', error);
+      console.error('Submit error:', error);
       if (error.response?.status === 401) {
-        showStatus('Please log in to create products.', 'error');
-        // Optionally redirect to login
+        showStatus('Please log in to manage products.', 'error');
         window.location.href = '/login';
       } else {
-        showStatus('Error creating product. Please try again.', 'error');
+        showStatus(`Error ${editingProductId ? 'updating' : 'creating'} product. Please try again.`, 'error');
       }
     } finally {
       setIsSubmitting(false);
     }
-  };  
+  };
 
-  // Handle product management
-  const handleProductEdit = async (product) => {
-    // Set the form values to the selected product
+  // Handle product edit
+  const handleProductEdit = (product) => {
+    setEditingProductId(product._id);
     setNewProduct({
       name: product.name,
       description: product.description,
@@ -184,10 +193,24 @@ const Seller = () => {
       quantity: product.quantity.toString(),
       imagePath: product.imagePath,
     });
-    // Scroll to form
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setNewProduct({
+      name: "",
+      description: "",
+      price: "",
+      category: "",
+      quantity: "",
+      imagePath: "",
+    });
+    setErrors({});
+  };
+
+  // Handle product delete
   const handleProductDelete = async (productId) => {
     if (!window.confirm("Are you sure you want to delete this product?")) {
       return;
@@ -207,7 +230,7 @@ const Seller = () => {
     <div className="seller-container">
       <div className="seller-form-wrapper">
         <div className="seller-header">
-          <h2>Seller Dashboard</h2>
+          <h2>{editingProductId ? 'Edit Product' : 'Create New Product'}</h2>
           <p>Manage your products here</p>
         </div>
 
@@ -319,16 +342,30 @@ const Seller = () => {
             </div>
           </div>
 
-          <button
-            className={`submit-button ${isSubmitting ? "submitting" : ""}`}
-            onClick={handleProductCreate}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Creating Product..." : "Create Product"}
-          </button>
+          <div className="button-group">
+            <button
+              className={`submit-button ${isSubmitting ? "submitting" : ""}`}
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting 
+                ? (editingProductId ? "Updating..." : "Creating...") 
+                : (editingProductId ? "Update Product" : "Create Product")}
+            </button>
+            
+            {editingProductId && (
+              <button
+                className="submit-button"
+                onClick={handleCancelEdit}
+                disabled={isSubmitting}
+              >
+                Cancel Edit
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="seller-form">
+        <div className="seller-products">
           <h2 className="seller-header">My Products</h2>
           <div className="seller-dashboard__products-table">
             <table>
