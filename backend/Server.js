@@ -59,6 +59,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 
+app.use('/api/products', require('./routes/products'));
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);

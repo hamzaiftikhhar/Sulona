@@ -1,4 +1,3 @@
-// src/api/axiosConfig.js
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -9,26 +8,28 @@ const axiosInstance = axios.create({
   }
 });
 
-// Optional: Add request interceptor for logging
+// Add request interceptor for auth token
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log('Axios Request:', config);
+    const token = localStorage.getItem('token'); // or wherever you store your token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
-    console.error('Axios Request Error:', error);
     return Promise.reject(error);
   }
 );
 
-// Optional: Add response interceptor for logging
+// Response interceptor for handling auth errors
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log('Axios Response:', response);
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.error('Axios Response Error:', error);
+    if (error.response?.status === 401) {
+      // Handle unauthorized error (e.g., redirect to login)
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );

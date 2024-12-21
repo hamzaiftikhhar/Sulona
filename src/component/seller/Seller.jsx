@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosConfig";
 import "./Seller.css";
 
 const Seller = () => {
   const [products, setProducts] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState({ show: false, message: '', type: '' });
+  const [submitStatus, setSubmitStatus] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -24,49 +28,51 @@ const Seller = () => {
   // Validation rules
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Name validation
     if (!newProduct.name.trim()) {
-      newErrors.name = 'Product name is required';
+      newErrors.name = "Product name is required";
     } else if (newProduct.name.length < 3) {
-      newErrors.name = 'Product name must be at least 3 characters';
+      newErrors.name = "Product name must be at least 3 characters";
     }
 
     // Description validation
     if (!newProduct.description.trim()) {
-      newErrors.description = 'Product description is required';
+      newErrors.description = "Product description is required";
     } else if (newProduct.description.length < 20) {
-      newErrors.description = 'Description must be at least 20 characters';
+      newErrors.description = "Description must be at least 20 characters";
     }
 
     // Price validation
     if (!newProduct.price) {
-      newErrors.price = 'Price is required';
+      newErrors.price = "Price is required";
     } else if (Number(newProduct.price) <= 0) {
-      newErrors.price = 'Price must be greater than 0';
+      newErrors.price = "Price must be greater than 0";
     } else if (!/^\d+(\.\d{1,2})?$/.test(newProduct.price)) {
-      newErrors.price = 'Price must be a valid number with up to 2 decimal places';
+      newErrors.price =
+        "Price must be a valid number with up to 2 decimal places";
     }
 
     // Category validation
     if (!newProduct.category.trim()) {
-      newErrors.category = 'Category is required';
+      newErrors.category = "Category is required";
     }
 
     // Quantity validation
     if (!newProduct.quantity) {
-      newErrors.quantity = 'Quantity is required';
+      newErrors.quantity = "Quantity is required";
     } else if (Number(newProduct.quantity) < 0) {
-      newErrors.quantity = 'Quantity cannot be negative';
+      newErrors.quantity = "Quantity cannot be negative";
     } else if (!Number.isInteger(Number(newProduct.quantity))) {
-      newErrors.quantity = 'Quantity must be a whole number';
+      newErrors.quantity = "Quantity must be a whole number";
     }
 
-    // Image path validation
+    // Image path validation (local string)
     if (!newProduct.imagePath.trim()) {
-      newErrors.imagePath = 'Image path is required';
-    } else if (!isValidUrl(newProduct.imagePath)) {
-      newErrors.imagePath = 'Please enter a valid URL for the image';
+      newErrors.imagePath = "Image path is required";
+    } else if (!/^[a-zA-Z0-9_\-./]+$/.test(newProduct.imagePath)) {
+      newErrors.imagePath =
+        'Image path must be a valid string (e.g., "/images/product1.jpg")';
     }
 
     setErrors(newErrors);
@@ -86,31 +92,34 @@ const Seller = () => {
   // Fetch user's products
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("/api/products");
+      const response = await axiosInstance.get("api/products");
       // Ensure we have an array
       const productsData = Array.isArray(response.data) ? response.data : [];
       setProducts(productsData);
     } catch (error) {
-      console.error('Fetch error:', error);
+      console.error("Fetch error:", error);
       setProducts([]); // Reset to empty array on error
-      showStatus('Error fetching products. Please try again.', 'error');
+      showStatus("Error fetching products. Please try again.", "error");
     }
   };
 
   // Handle input changes
   const handleProductChange = (e) => {
     const { name, value } = e.target;
-    setNewProduct(prev => ({ ...prev, [name]: value }));
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
     // Clear error for this field when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   // Show status message
   const showStatus = (message, type) => {
     setSubmitStatus({ show: true, message, type });
-    setTimeout(() => setSubmitStatus({ show: false, message: '', type: '' }), 5000);
+    setTimeout(
+      () => setSubmitStatus({ show: false, message: "", type: "" }),
+      5000
+    );
   };
 
   // Handle product creation
@@ -119,9 +128,17 @@ const Seller = () => {
       showStatus('Please fix the errors before submitting.', 'error');
       return;
     }
-
+  
     setIsSubmitting(true);
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showStatus('Please log in to create products.', 'error');
+        // Optionally redirect to login
+        window.location.href = '/login';
+        return;
+      }
+  
       const productData = {
         name: newProduct.name.trim(),
         description: newProduct.description.trim(),
@@ -130,8 +147,8 @@ const Seller = () => {
         quantity: parseInt(newProduct.quantity),
         imagePath: newProduct.imagePath.trim(),
       };
-
-      await axios.post("/api/products", productData);
+  
+      await axiosInstance.post("api/products", productData);
       showStatus('Product created successfully!', 'success');
       setNewProduct({
         name: "",
@@ -143,11 +160,18 @@ const Seller = () => {
       });
       fetchProducts();
     } catch (error) {
-      showStatus('Error creating product. Please try again.', 'error');
+      console.error('Create error:', error);
+      if (error.response?.status === 401) {
+        showStatus('Please log in to create products.', 'error');
+        // Optionally redirect to login
+        window.location.href = '/login';
+      } else {
+        showStatus('Error creating product. Please try again.', 'error');
+      }
     } finally {
       setIsSubmitting(false);
     }
-  };
+  };  
 
   // Handle product management
   const handleProductEdit = async (product) => {
@@ -161,20 +185,21 @@ const Seller = () => {
       imagePath: product.imagePath,
     });
     // Scroll to form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleProductDelete = async (productId) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
       return;
     }
 
     try {
-      await axios.delete(`/api/products/${productId}`);
-      showStatus('Product deleted successfully!', 'success');
+      await axiosInstance.delete(`api/products/${productId}`);
+      showStatus("Product deleted successfully!", "success");
       fetchProducts();
     } catch (error) {
-      showStatus('Error deleting product. Please try again.', 'error');
+      console.error("Delete error:", error);
+      showStatus("Error deleting product. Please try again.", "error");
     }
   };
 
@@ -203,11 +228,13 @@ const Seller = () => {
                 placeholder="Enter product name"
                 value={newProduct.name}
                 onChange={handleProductChange}
-                className={errors.name ? 'error' : ''}
+                className={errors.name ? "error" : ""}
               />
-              {errors.name && <span className="error-message">{errors.name}</span>}
+              {errors.name && (
+                <span className="error-message">{errors.name}</span>
+              )}
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="description">Product Description *</label>
               <textarea
@@ -216,9 +243,11 @@ const Seller = () => {
                 placeholder="Enter detailed product description"
                 value={newProduct.description}
                 onChange={handleProductChange}
-                className={errors.description ? 'error' : ''}
+                className={errors.description ? "error" : ""}
               ></textarea>
-              {errors.description && <span className="error-message">{errors.description}</span>}
+              {errors.description && (
+                <span className="error-message">{errors.description}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -232,9 +261,11 @@ const Seller = () => {
                 min="0"
                 value={newProduct.price}
                 onChange={handleProductChange}
-                className={errors.price ? 'error' : ''}
+                className={errors.price ? "error" : ""}
               />
-              {errors.price && <span className="error-message">{errors.price}</span>}
+              {errors.price && (
+                <span className="error-message">{errors.price}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -246,9 +277,11 @@ const Seller = () => {
                 placeholder="Enter product category"
                 value={newProduct.category}
                 onChange={handleProductChange}
-                className={errors.category ? 'error' : ''}
+                className={errors.category ? "error" : ""}
               />
-              {errors.category && <span className="error-message">{errors.category}</span>}
+              {errors.category && (
+                <span className="error-message">{errors.category}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -262,9 +295,11 @@ const Seller = () => {
                 step="1"
                 value={newProduct.quantity}
                 onChange={handleProductChange}
-                className={errors.quantity ? 'error' : ''}
+                className={errors.quantity ? "error" : ""}
               />
-              {errors.quantity && <span className="error-message">{errors.quantity}</span>}
+              {errors.quantity && (
+                <span className="error-message">{errors.quantity}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -276,18 +311,20 @@ const Seller = () => {
                 placeholder="https://example.com/image.jpg"
                 value={newProduct.imagePath}
                 onChange={handleProductChange}
-                className={errors.imagePath ? 'error' : ''}
+                className={errors.imagePath ? "error" : ""}
               />
-              {errors.imagePath && <span className="error-message">{errors.imagePath}</span>}
+              {errors.imagePath && (
+                <span className="error-message">{errors.imagePath}</span>
+              )}
             </div>
           </div>
 
-          <button 
-            className={`submit-button ${isSubmitting ? 'submitting' : ''}`} 
+          <button
+            className={`submit-button ${isSubmitting ? "submitting" : ""}`}
             onClick={handleProductCreate}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Creating Product...' : 'Create Product'}
+            {isSubmitting ? "Creating Product..." : "Create Product"}
           </button>
         </div>
 
@@ -308,7 +345,9 @@ const Seller = () => {
               <tbody>
                 {products.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-products">No products found</td>
+                    <td colSpan="6" className="no-products">
+                      No products found
+                    </td>
                   </tr>
                 ) : (
                   products.map((product) => (
