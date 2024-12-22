@@ -2,38 +2,27 @@
 import "./SelectCategory.css";
 
 function SelectCategory({ checkBoxState, handleCheckBox }) {
+  const categories = [
+    { name: "male", label: "male" },
+    { name: "female", label: "Female" },
+    { name: "kids", label: "kids" }
+  ];
+
   return (
     <div className="category-filter">
       <h3>Categories</h3>
       <div className="checkbox-group">
-        <label>
-          <input
-            type="checkbox"
-            name="electronics"
-            checked={checkBoxState.electronics}
-            onChange={handleCheckBox}
-          />
-          Electronics
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="clothing"
-            checked={checkBoxState.clothing}
-            onChange={handleCheckBox}
-          />
-          Clothing
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="books"
-            checked={checkBoxState.books}
-            onChange={handleCheckBox}
-          />
-          Books
-        </label>
-        {/* Add more categories as needed */}
+        {categories.map(category => (
+          <label key={category.name}>
+            <input
+              type="checkbox"
+              name={category.name}
+              checked={checkBoxState[category.name]}
+              onChange={handleCheckBox}
+            />
+            {category.label}
+          </label>
+        ))}
       </div>
     </div>
   );
