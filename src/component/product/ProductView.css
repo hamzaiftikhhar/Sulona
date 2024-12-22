@@ -94,6 +94,50 @@
   color: #666;
   margin-bottom: 0.5rem;
 }
+.product-container {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  min-height: calc(100vh - 70px);
+  --image-wrapper-width: 55%;
+  /* Add padding at the top */
+  padding-top: 2rem;
+  /* Add max-width and center the container */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-img_wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  /* Adjust height to prevent overflow */
+  height: clamp(260px, 70vh, 600px);
+  border: none;
+  width: var(--image-wrapper-width);
+  overflow: hidden;
+  /* Add padding to contain the image */
+  padding: 2rem;
+}
+
+.product-img_wrapper img {
+  /* Remove margin-top that was causing overflow */
+  margin-top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* This will maintain aspect ratio */
+  transition: all 0.2s;
+  border: none;
+}
+
+.product-info {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  width: calc(100% - var(--image-wrapper-width));
+  /* Align with image wrapper padding */
+  padding-top: 2rem;
+}
 
 @media (max-width: 800px) {
   .product-container {

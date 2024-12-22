@@ -11,6 +11,7 @@ import RootLayout from "./layout/RootLayout";
 // pages
 import Home from "./pages/Home";
 import ExploreProduct from "./pages/ExploreProducts";
+import ProductView from "./component/product/ProductView";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 import Auth from "./component/Auth/Auth";
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
     <Route element={<RootLayout />}>
       <Route index element={<Home />} />
       <Route path="/explore/:category" element={<ExploreProduct />} />
+      <Route path="/product/:id" element={<ProductView />} />
       <Route path="/product/:productId" element={<Product />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/" element={<Home />} />
