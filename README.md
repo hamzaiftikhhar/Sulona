@@ -36,7 +36,7 @@ This is a full-stack e-commerce application built using the MERN stack (MongoDB,
 
 ### Deployment:
 - **Frontend**: Deployed on [Vercel] (replace with your platform).
--**link** : https://soluna-k36fo8xha-hamzaiftikhhars-projects.vercel.app
+- **Link**: https://soluna-k36fo8xha-hamzaiftikhhars-projects.vercel.app
 ### Development Tools:
 - **VS Code**: Code editor.
 - **Postman**: For API testing.
