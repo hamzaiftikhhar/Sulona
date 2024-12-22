@@ -1,64 +1,136 @@
-import React from "react";
-import { useCartActions } from "../../store/Store";
-import { useCart } from "../../store/Store";
-import "./UserInfo.css";
+// UserInfo.jsx
+import React, { useState } from "react";
+import { useCartActions, useCart } from "../../store/Store";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import "./UserInfo.css";
 
 function UserInfo() {
+  const [formData, setFormData] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
-    <div className="user-info_container">
-      <ContactInformation />
-      <ShippingAddress />
+    <div className="checkout-form">
+      <div className="checkout-form-header">
+        <h2>Checkout</h2>
+        <p>Please fill in your information to complete your order</p>
+      </div>
+      
+      <ContactInformation formData={formData} handleChange={handleChange} />
+      <ShippingAddress formData={formData} handleChange={handleChange} />
     </div>
   );
 }
 
-function ContactInformation() {
+function ContactInformation({ formData, handleChange }) {
   return (
-    <div className="contact-info_container">
+    <div className="form-section">
       <h3>Contact Information</h3>
-      <input type="email" placeholder="Email" />
+      <div className="form-group">
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className="form-input"
+        />
+      </div>
     </div>
   );
 }
 
-function ShippingAddress() {
+function ShippingAddress({ formData, handleChange }) {
   const { emptyCart } = useCartActions();
   const cart = useCart();
-
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   function checkoutHandler() {
     if (cart.length < 1) {
-      toast.error("Your shopping list is Emtpy");
+      toast.error("Your shopping cart is empty");
       return;
     }
-    let totalPrice = cart.reduce((acc, cur) => {
-      return acc + cur.qty * cur.price;
+
+    const totalPrice = cart.reduce((acc, cur) => {
+      return acc + cur.quantity * cur.price;
     }, 0);
+
     if (totalPrice < 1) {
       toast.error("Cannot process order value of zero(0).");
       return;
     }
 
+    // Validate form
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     emptyCart();
-    toast.success("Checked out");
+    toast.success("Order placed successfully!");
     navigate("/");
   }
 
   return (
-    <div className="shipping-address_container">
+    <div className="form-section">
       <h3>Shipping Address</h3>
-      <div className="shipping-address_wrapper">
-        <input type="name" placeholder="First name" id="firstname" />
-        <input type="name" placeholder="Last name" id="lastname" />
-        <input type="name" placeholder="Address" id="address" />
-        <input type="name" placeholder="City" id="city" />
-        <button className="checkout-btn" onClick={checkoutHandler}>
-          Checkout
-        </button>
+      <div className="form-row">
+        <div className="form-group">
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="First name"
+            className="form-input"
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Last name"
+            className="form-input"
+          />
+        </div>
       </div>
+      <div className="form-group">
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder="Address"
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="text"
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+          placeholder="City"
+          className="form-input"
+        />
+      </div>
+      <button className="checkout-button" onClick={checkoutHandler}>
+        Place Order
+      </button>
     </div>
   );
 }

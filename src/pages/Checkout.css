@@ -3,6 +3,15 @@
   grid-template-columns: 60fr 40fr;
   margin-bottom: 60px;
 }
+.checkout-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+  padding: 0 20px;
+  min-height: calc(100vh - 200px);
+}
 
 @media (max-width: 800px) {
   .container.checkout-container {

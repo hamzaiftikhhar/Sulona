@@ -66,7 +66,7 @@ function Navigations({ toggleShowCart }) {
         </li>
         {user && (
           <li className="nav-link">
-            <NavLink to="/Seller">Add Product</NavLink>
+            <NavLink to="/Seller">Admin Dashboard</NavLink>
           </li>
         )}
       </ul>
