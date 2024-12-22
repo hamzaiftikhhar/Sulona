@@ -27,7 +27,10 @@ function ProductCard({ product }) {
       <Link to={`/product/${product._id}`}> {/* Changed from id to _id */}
         <div className="product-card_img">
           
-          <img src={`../../+${product.imagePath}`} alt={product.name} /> {/* Changed from image to imagePath */}
+        <img
+            src={product.imagePath.startsWith("http") ? product.imagePath : `/images/${product.imagePath}`}
+            alt={product.name}
+          /> {/* Changed from image to imagePath */}
         </div>
       </Link>
       <div className="product-card_description">

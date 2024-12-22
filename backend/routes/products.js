@@ -1,18 +1,31 @@
+// backend/routes/products.jsx
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const auth = require('../middleware/auth');
 
 // Make routes that modify data require authentication
+router.use((req, res, next) => {
+  console.log('Products Router:', {
+    method: req.method,
+    url: req.url,
+    path: req.path,
+    params: req.params
+  });
+  next();
+});
+
 router.get('/', async (req, res) => {
+  console.log('Attempting to fetch all products');
   try {
     const products = await Product.find();
+    console.log(`Found ${products.length} products`);
     res.json(products);
   } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ message: error.message });
   }
 });
-
 // Protected routes - require authentication
 router.post('/', auth, async (req, res) => {
   try {
@@ -59,6 +72,19 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Product not found or unauthorized' });
     }
     res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Add this route to your products.jsx
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
