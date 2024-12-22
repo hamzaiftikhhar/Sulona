@@ -7,6 +7,7 @@ import PriceFilter from "../component/explore/PriceFilter";
 import "./ExploreProducts.css";
 import { useParams } from "react-router-dom";
 import Shimmer from "../component/shimmer/Shimmer";
+import Footer from "../component/Footer/Footer";
 
 function ExploreProduct() {
   const [products, setProducts] = useState([]);
@@ -85,19 +86,22 @@ function ExploreProduct() {
   }
 
   return (
+    <>
     <main className="product-main">
       <PriceFilter
         priceFilter={priceFilter}
         handlePriceFilter={handlePriceFilter}
-      />
+        />
       <SelectCategory
         checkBoxState={checkBoxState}
         handleCheckBox={handleCategoryCheckBox}
-      />
+        />
       <div className="products-container">
         <AllProducts products={products} />
       </div>
     </main>
+    <Footer/>
+        </>
   );
 }
 

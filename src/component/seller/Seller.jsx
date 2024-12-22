@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import "./Seller.css";
+import Footer from "../Footer/Footer";
 
 const Seller = () => {
   const [products, setProducts] = useState([]);
@@ -227,6 +228,7 @@ const Seller = () => {
   };
 
   return (
+    <>
     <div className="seller-container">
       <div className="seller-form-wrapper">
         <div className="seller-header">
@@ -417,6 +419,8 @@ const Seller = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

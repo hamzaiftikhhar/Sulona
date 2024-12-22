@@ -17,6 +17,7 @@ import Checkout from "./pages/Checkout";
 import Auth from "./component/Auth/Auth";
 import Navbar from "./component/Navbar/Navbar";
 import { Toaster } from "react-hot-toast";
+import AboutUs from "./pages/AbourUs";
 import Seller from "./component/seller/Seller";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Auth type="login" />} />
       <Route path="/signup" element={<Auth type="signup" />} />
+      <Route path="/aboutUs" element={<AboutUs />} />
       <Route path="/seller" element={<Seller type="Seller" />} />
     </Route>
   )

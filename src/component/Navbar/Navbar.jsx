@@ -59,17 +59,16 @@ function Navigations({ toggleShowCart }) {
           <NavLink to="/">Home</NavLink>
         </li>
         <li className="nav-link">
-          <NavLink to="/explore/men">Men</NavLink>
-        </li>
-        <li className="nav-link">
-          <NavLink to="/explore/women">Women</NavLink>
+          <NavLink to="/aboutUs">About Us</NavLink>
         </li>
         <li className="nav-link">
           <NavLink to="/explore/all">Explore All</NavLink>
         </li>
-        <li className="nav-link">
-          <NavLink to="/Seller">Add Product</NavLink>
-        </li>
+        {user && (
+          <li className="nav-link">
+            <NavLink to="/Seller">Add Product</NavLink>
+          </li>
+        )}
       </ul>
       <div className="nav-secondary_btn" onClick={handleOpenNavigation}>
         <span></span>
@@ -81,7 +80,6 @@ function Navigations({ toggleShowCart }) {
           <>
             <span>{user.email}</span>
             <span className="auth-divider">|</span>
-
             <Link type="submit" onClick={logout} className="nav-link">
               Logout
             </Link>
