@@ -94,6 +94,7 @@ router.post('/login', async (req, res) => {
       token,
       user: { id: user._id, email: user.email }
     });
+    await useCart.getState().loadCart();
 
   } catch (error) {
     console.error('Login Error:', error);
