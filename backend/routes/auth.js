@@ -1,8 +1,10 @@
+// routes/auth.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
 
 // Signup Route
 router.post('/signup', async (req, res) => {
@@ -54,15 +56,17 @@ router.post('/signup', async (req, res) => {
 });
 
 // Login Route
+// Login Route
 router.post('/login', async (req, res) => {
   console.log('🚀 Login Route Accessed');
   console.log('Request Details:', {
     body: req.body,
     headers: req.headers
   });
+
   try {
     console.log('Login Request Body:', req.body);
-    
+
     const { email, password } = req.body;
 
     // Validate input
@@ -89,16 +93,24 @@ router.post('/login', async (req, res) => {
       { expiresIn: '24h' }
     );
 
+    // Send response
     res.status(200).json({
       message: 'Login successful',
       token,
       user: { id: user._id, email: user.email }
     });
-    await useCart.getState().loadCart();
+
+    // Note: The following line is removed:
+    // await useCart.getState().loadCart();
 
   } catch (error) {
     console.error('Login Error:', error);
-    res.status(500).json({ message: 'Something went wrong' });
+
+    // Send error response only if headers have not been sent
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'Something went wrong' });
+    }
   }
 });
+
 module.exports = router;

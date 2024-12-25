@@ -1,17 +1,20 @@
-// frontend/src/context/AuthContext.jsx
 import { createContext, useContext, useState } from 'react';
+import { useCartActions } from '../store/store';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
+  const [user, setUser] = useState(
+    localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+  );
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const { emptyCart } = useCartActions();
 
-  const login = (userData, token) => {
+  const login = async (userData, userToken) => {
     setUser(userData);
-    setToken(token);
+    setToken(userToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', userToken);
   };
 
   const logout = () => {
@@ -19,10 +22,17 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    emptyCart();
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      login, 
+      logout,
+      isAuthenticated: !!token 
+    }}>
       {children}
     </AuthContext.Provider>
   );
