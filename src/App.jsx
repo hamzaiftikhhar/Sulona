@@ -10,16 +10,13 @@ import AboutUs from "./pages/AbourUs";
 import Seller from "./component/seller/Seller";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
-import { useAuth } from './context/AuthContext'; // Adjust the path based on your project structure
+import { useAuth } from './context/AuthContext';
 
-
-// Protected Route component
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth(); // Ensure this line is correctly accessing useAuth
-  return user ? children : <Navigate to="/login" />;
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" replace state={{ from: location.pathname }} />;
 };
 
-// Define the router configuration
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
@@ -38,12 +35,18 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Auth type="login" />} />
       <Route path="/signup" element={<Auth type="signup" />} />
       <Route path="/aboutUs" element={<AboutUs />} />
-      <Route path="/seller" element={<Seller type="Seller" />} />
+      <Route 
+        path="/seller" 
+        element={
+          <ProtectedRoute>
+            <Seller />
+          </ProtectedRoute>
+        } 
+      />
     </Route>
   )
 );
 
-// App Component
 function App() {
   return (
     <AuthProvider>
