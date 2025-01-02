@@ -39,3 +39,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+// AuthProvider: This component acts as a provider for the context.
+//  It holds the state for user and token, which are retrieved from localStorage if available. It also includes login and logout functions:

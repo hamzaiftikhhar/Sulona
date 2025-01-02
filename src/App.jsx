@@ -6,7 +6,7 @@ import ProductView from "./component/product/ProductView";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 import Auth from "./component/Auth/Auth";
-import AboutUs from "./pages/AbourUs";
+import AboutUs from "./pages/AboutUs";
 import Seller from "./component/seller/Seller";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";

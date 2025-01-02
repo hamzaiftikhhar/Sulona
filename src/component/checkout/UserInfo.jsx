@@ -57,30 +57,71 @@ function ShippingAddress({ formData, handleChange }) {
   const cart = useCart();
   const navigate = useNavigate();
 
-  function checkoutHandler() {
-    if (cart.length < 1) {
-      toast.error("Your shopping cart is empty");
-      return;
+  async function checkoutHandler() {
+    try {
+      // Existing validation checks
+      if (cart.length < 1) {
+        toast.error("Your shopping cart is empty");
+        return;
+      }
+  
+      const subtotal = cart.reduce((acc, cur) => {
+        return acc + cur.quantity * cur.price;
+      }, 0);
+  
+      if (subtotal < 1) {
+        toast.error("Cannot process order value of zero(0).");
+        return;
+      }
+  
+      if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+      
+  
+      // Show loading state
+      toast.loading("Processing your order...");
+  
+      // Calculate order summary
+      const shipping = 0; // Free shipping
+      const total = subtotal + shipping;
+  
+      // Send order to backend
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // If you have auth
+        },
+        body: JSON.stringify({
+          formData,
+          cart,
+          subtotal,
+          shipping: 0,
+          total: subtotal // Since shipping is free
+        })
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+  
+      // Clear cart and show success message
+      emptyCart();
+      toast.dismiss(); // Clear the loading toast
+      toast.success("Order placed successfully!");
+      
+      // Store order ID and navigate
+      localStorage.setItem('lastOrderId', data.orderId);
+      navigate(`/order-success/${data.orderId}`);
+    } catch (error) {
+      toast.dismiss(); // Clear the loading toast
+      toast.error(error.message || 'Error placing order');
+      console.error('Checkout error:', error);
     }
-
-    const totalPrice = cart.reduce((acc, cur) => {
-      return acc + cur.quantity * cur.price;
-    }, 0);
-
-    if (totalPrice < 1) {
-      toast.error("Cannot process order value of zero(0).");
-      return;
-    }
-
-    // Validate form
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    emptyCart();
-    toast.success("Order placed successfully!");
-    navigate("/");
   }
 
   return (
