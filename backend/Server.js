@@ -1,24 +1,27 @@
 // backend/Server.js
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-require('dotenv').config();
+
+// Import the orders route
+const ordersRoute = require('./routes/orders');
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
 
 // Detailed CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+    const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 // Middleware
@@ -27,50 +30,53 @@ app.use(express.json());
 
 // Request logging
 app.use((req, res, next) => {
-  console.log('📡Incoming request:', {
+  console.log("📡Incoming request:", {
     method: req.method,
-    fullPath: req.originalUrl,  // This shows the complete path
+    fullPath: req.originalUrl, // This shows the complete path
     body: req.body,
-    headers: req.headers
+    headers: req.headers,
   });
   next();
 });
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/Soluna', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('MongoDB connected successfully');
-  console.log('Connected to database:', mongoose.connection.db.databaseName);
-})
-.catch((err) => console.error('MongoDB connection error:', err));
+mongoose
+  .connect("mongodb://localhost:27017/Soluna", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MongoDB connected successfully");
+    console.log("Connected to database:", mongoose.connection.db.databaseName);
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Add this before your routes in server.js
 app.use((req, res, next) => {
-  console.log('🔍 Route Debug:', {
+  console.log("🔍 Route Debug:", {
     method: req.method,
     path: req.path,
-    originalUrl: req.originalUrl
+    originalUrl: req.originalUrl,
   });
   next();
 });
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
+// Add this with your other route declarations
+app.use('/api/orders', ordersRoute);
 
+// Keep your existing routes
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/cart', require('./routes/cart'));
-app.use('/api/orders', require('./routes/orders'));
+
 
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  console.error('Unhandled Error:', err);
+  console.error("Unhandled Error:", err);
   res.status(500).json({
-    message: 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? err.message : {}
+    message: "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err.message : {},
   });
 });
 

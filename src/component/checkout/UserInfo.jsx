@@ -11,13 +11,13 @@ function UserInfo() {
     firstName: "",
     lastName: "",
     address: "",
-    city: ""
+    city: "",
   });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -27,7 +27,7 @@ function UserInfo() {
         <h2>Checkout</h2>
         <p>Please fill in your information to complete your order</p>
       </div>
-      
+
       <ContactInformation formData={formData} handleChange={handleChange} />
       <ShippingAddress formData={formData} handleChange={handleChange} />
     </div>
@@ -64,63 +64,80 @@ function ShippingAddress({ formData, handleChange }) {
         toast.error("Your shopping cart is empty");
         return;
       }
-  
+
       const subtotal = cart.reduce((acc, cur) => {
         return acc + cur.quantity * cur.price;
       }, 0);
-  
+
       if (subtotal < 1) {
         toast.error("Cannot process order value of zero(0).");
         return;
       }
-  
-      if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city) {
+
+      if (
+        !formData.email ||
+        !formData.firstName ||
+        !formData.lastName ||
+        !formData.address ||
+        !formData.city
+      ) {
         toast.error("Please fill in all fields");
         return;
       }
-      
-  
+
       // Show loading state
       toast.loading("Processing your order...");
-  
+
       // Calculate order summary
       const shipping = 0; // Free shipping
       const total = subtotal + shipping;
-  
+
       // Send order to backend
-      const response = await fetch('http://localhost:5000/api/orders', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // If you have auth
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          formData,
-          cart,
-          subtotal,
+          formData: {
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            address: formData.address,
+            city: formData.city,
+          },
+          cart: cart,
+          subtotal: subtotal,
           shipping: 0,
-          total: subtotal // Since shipping is free
-        })
+          total: subtotal,
+        }),
       });
-  
-      const data = await response.json();
-  
+
       if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        const errorText = await response.text();
+        console.error("Server response:", errorText);
+        throw new Error("Failed to create order");
       }
-  
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
       // Clear cart and show success message
       emptyCart();
       toast.dismiss(); // Clear the loading toast
       toast.success("Order placed successfully!");
-      
+
       // Store order ID and navigate
-      localStorage.setItem('lastOrderId', data.orderId);
+      localStorage.setItem("lastOrderId", data.orderId);
       navigate(`/order-success/${data.orderId}`);
     } catch (error) {
       toast.dismiss(); // Clear the loading toast
-      toast.error(error.message || 'Error placing order');
-      console.error('Checkout error:', error);
+      toast.error(error.message || "Error placing order");
+      console.error("Checkout error:", error);
     }
   }
 
