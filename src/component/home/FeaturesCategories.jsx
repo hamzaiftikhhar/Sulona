@@ -1,59 +1,57 @@
-"use client"
-
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
-import Link from "next/link"
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "phosphor-react";
+import "./FeaturedCategories.css";
 
 const categories = [
   {
     title: "New Arrivals",
-    image: "/placeholder.svg?height=600&width=400",
-    link: "/category/new-arrivals",
+    image: "/images/collection-item4.jpg", // Update with your image path
+    link: "/category/new-arrivals"
   },
   {
     title: "Trending Now",
-    image: "/placeholder.svg?height=600&width=400",
-    link: "/category/trending",
+    image: "/images/card-large-item1.jpg", // Update with your image path
+    link: "/category/trending"
   },
   {
     title: "Accessories",
-    image: "/placeholder.svg?height=600&width=400",
-    link: "/category/accessories",
-  },
-]
+    image: "/images/card-large-item7.jpg", // Update with your image path
+    link: "/category/accessories"
+  }
+];
 
-export default function FeaturedCategories() {
+function FeaturedCategories() {
   return (
-    <section className="py-24">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Featured Categories</h2>
-          <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-            Explore our curated collection of premium fashion pieces.
-          </p>
+    <section className="featured-categories">
+      <div className="container">
+        <div className="featured-header">
+          <h2>Featured Categories</h2>
+          <p>Explore our curated collection of premium fashion pieces.</p>
         </div>
-        <div className="grid gap-6 mt-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="categories-grid">
           {categories.map((category, index) => (
             <motion.div
               key={category.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-lg"
+              className="category-card"
             >
-              <Link href={category.link} className="block aspect-[3/4]">
+              <Link to={category.link} className="category-link">
                 <img
-                  src={category.image || "/placeholder.svg"}
+                  src={category.image || ""}
                   alt={category.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="category-image"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-bold text-white">{category.title}</h3>
-                  <p className="mt-2 flex items-center text-white">
-                    Shop Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </p>
+                <div className="category-overlay">
+                  <div className="category-content">
+                    <h3>{category.title}</h3>
+                    <p className="shop-now">
+                      Shop Now
+                      <ArrowRight size={16} weight="bold" />
+                    </p>
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -61,6 +59,7 @@ export default function FeaturedCategories() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
+export default FeaturedCategories;
