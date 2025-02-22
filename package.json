@@ -38,7 +38,11 @@
 
     "express-fileupload": "^1.5.1",
 
+    "framer-motion": "^12.4.7",
+
     "jsonwebtoken": "^9.0.2",
+
+    "lucide-react": "^0.475.0",
 
     "mongoose": "^8.9.1",
 

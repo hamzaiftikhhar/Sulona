@@ -7,17 +7,13 @@ function HomeInfo() {
     <article className="home-info">
       <div className="info-txt">
         <h2>
-          Experience the height of fashion with our exquisite designer pieces.
-        </h2>
+        Experience The Height of Fashion        </h2><br />
         <p>
-          Where style, sophistication, exclusivity is the forefront of our
-          collection. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Repellat quaerat nostrum quia nam earum, libero, expedita impedit
-          delectus provident quo eveniet.
+        Where style meets sophistication. Discover our curated collection of exquisite designer pieces that define modern luxury.
         </p>
       </div>
       <button className="explore-clothing_btn">
-        <Link to="explore/all">Discover Our Products</Link>
+        <Link to="explore/all">Discover Our Products </Link>
       </button>
     </article>
   );
