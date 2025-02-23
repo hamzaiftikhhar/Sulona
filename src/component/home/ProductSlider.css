@@ -1,0 +1,86 @@
+.product-slider {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  height: 500px;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.slide-image:hover {
+  filter: grayscale(0%);
+}
+
+.slider-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.slider-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.slider-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.slider-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.slider-dot.active {
+  background-color: #000;
+}
+
+@media (max-width: 1024px) {
+  .slide {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide {
+    height: 300px;
+  }
+}
+
