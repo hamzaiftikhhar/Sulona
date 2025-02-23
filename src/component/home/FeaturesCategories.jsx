@@ -32,7 +32,7 @@ function FeaturedCategories() {
         <div className="categories-grid">
           {categories.map((category, index) => (
             <motion.div
-              key={category.title}
+              key={category.title}z
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}

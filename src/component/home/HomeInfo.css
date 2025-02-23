@@ -1,74 +1,51 @@
-.home-info {
-  max-width: 600px;
+.info-txt {
 }
-
-.home-info h1 {
+.info-txt h2 {
   font-size: clamp(3.4rem, 4vw + 1rem, 5.2rem);
   font-family: "Bebas Neue", sans-serif;
   line-height: 1;
-  margin-bottom: 24px;
 }
-
-.home-info p {
+.info-txt p {
   font-size: 1.8rem;
-  color: #666;
-  margin-bottom: 32px;
-  line-height: 1.6;
+  font-weight: 500;
+  margin-top: 4px;
 }
-
-.button-group {
-  display: flex;
-  gap: 16px;
-}
-
-.primary-button {
+.explore-clothing_btn {
+  margin-top: 26px;
   background-color: black;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 4px;
-  font-size: 1.6rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: transform 0.2s ease;
+  border: none;
+  border-radius: 8px;
+  a {
+    font-size: 1.6rem;
+    padding: 10px 14px;
+    display: inline-block;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+  }
 }
 
-.primary-button:hover {
-  transform: translateY(-2px);
+@media (max-width: 850px) {
+  .info-txt p {
+    font-size: 1.6rem;
+  }
+  .explore-clothing_btn {
+    margin-top: 18px;
+    a {
+      font-size: 1.4rem;
+    }
+  }
 }
-
-.secondary-button {
-  border: 1px solid black;
-  color: black;
-  padding: 12px 24px;
-  border-radius: 4px;
-  font-size: 1.6rem;
-  transition: background-color 0.2s ease;
-}
-
-.secondary-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 1024px) {
+@media (max-width: 800px) {
   .home-info {
-    max-width: 100%;
+    width: 90% !important;
   }
-
-  .button-group {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .button-group {
+  .info-txt {
+    display: flex;
     flex-direction: column;
+    gap: 16px;
   }
-
-  .primary-button,
-  .secondary-button {
-    width: 100%;
-    justify-content: center;
+  .info-txt h2 {
+    font-size: clamp(3.8rem, 4vw + 1rem, 5.2rem);
   }
 }
-

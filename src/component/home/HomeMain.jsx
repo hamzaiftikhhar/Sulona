@@ -1,23 +1,20 @@
-import HomeInfo from "./HomeInfo"
-import ProductSlider from "./ProductSlider"
-import "./HomeMain.css"
-import FeaturedCategories from "./FeaturesCategories"
+import React from "react";
+import HomePhotoShoot from "./HomePhotoShoot";
+import HomeInfo from "./HomeInfo";
+import FeaturedCategories from "./FeaturesCategories";
+import "./HomeMain.css";
 
 function HomeMain() {
   return (
     <>
-    <main className="home-main">
-      <div className="container">
-        <div className="hero-section">
-          <HomeInfo />
-          <ProductSlider />
-        </div>
-      </div>
+   
+    <main className="home-main container">
+      <HomeInfo />
+      <HomePhotoShoot />
     </main>
-    <FeaturedCategories/>
-    </>
-  )
+      <FeaturedCategories />
+      </>
+  );
 }
 
-export default HomeMain
-
+export default HomeMain;
