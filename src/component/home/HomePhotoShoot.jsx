@@ -6,7 +6,7 @@ function HomePhotoShoot() {
       <div className="model-grid">
         <div className="model-photo_wrapper top">
           <div className="photo-overlay"></div>
-          <img src="/images/home-photo-1.webp" className="model-photo" alt="Fashion model" />
+          <img src="/images/banner-image3.jpg" className="model-photo" alt="Fashion model" />
           <div className="photo-caption">
             <span>New Collection</span>
             <span className="caption-line"></span>
@@ -15,7 +15,7 @@ function HomePhotoShoot() {
 
         <div className="model-photo_wrapper middle">
           <div className="photo-overlay"></div>
-          <img src="/images/home-photo-2.webp" className="model-photo" alt="Fashion model" />
+          <img src="/images/card-image6.jpg" className="model-photo" alt="Fashion model" />
           <div className="photo-caption">
             <span>Premium Style</span>
             <span className="caption-line"></span>
@@ -24,7 +24,7 @@ function HomePhotoShoot() {
 
         <div className="model-photo_wrapper main">
           <div className="photo-overlay"></div>
-          <img src="/images/home-photo-3.webp" className="model-photo" alt="Fashion model" />
+          <img src="/images/card-large-item5.jpg" className="model-photo" alt="Fashion model" />
           <div className="photo-caption">
             <span>Luxury Design</span>
             <span className="caption-line"></span>
