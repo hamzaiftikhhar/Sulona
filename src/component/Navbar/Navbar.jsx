@@ -1,8 +1,7 @@
-// Navbar/Navbar.jsx
 import { useState } from "react";
 import { useCart } from "../../store/Store";
 import { Link, NavLink } from "react-router-dom";
-import { ShoppingCart } from "phosphor-react";
+import { ShoppingCart, MagnifyingGlass, X } from "phosphor-react";
 import SlidingCart from "./SlidingCart";
 import "./Navbar.css";
 import AuthForm from "../Auth/Auth";
@@ -10,15 +9,48 @@ import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
   const [showCart, setShowCart] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const { user, logout } = useAuth();
-
 
   function toggleShowCart() {
     setShowCart(!showCart);
   }
+
+  function toggleSearch() {
+    setShowSearch(!showSearch);
+  }
+
   return (
     <header className={`header ${showCart ? "visible" : ""}`}>
-      <Navigations toggleShowCart={toggleShowCart} />
+      <div className={`search-overlay ${showSearch ? "show" : ""}`}>
+        <div className="search-container container">
+          <div className="search-header">
+            <h2>Search Products</h2>
+            <button onClick={toggleSearch} className="close-search">
+              <X size={24} weight="bold" />
+            </button>
+          </div>
+          <div className="search-input-wrapper">
+            <MagnifyingGlass size={20} weight="bold" />
+            <input
+              type="text"
+              placeholder="Search for products..."
+              className="search-input"
+              autoFocus
+            />
+          </div>
+          <div className="search-suggestions">
+            <h3>Popular Searches</h3>
+            <div className="suggestion-tags">
+              <span>Dresses</span>
+              <span>Jackets</span>
+              <span>Accessories</span>
+              <span>New Arrivals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Navigations toggleShowCart={toggleShowCart} toggleSearch={toggleSearch} />
       <SlidingCart toggleShowCart={toggleShowCart} />
       <CartSliderOverlay />
     </header>
@@ -27,21 +59,19 @@ function Navbar() {
 
 function CartButton({ toggleShowCart }) {
   const cart = useCart();
-
   const totalCartQty = cart.reduce((totalQty, current) => {
-    return totalQty + (current.quantity || 0); 
+    return totalQty + (current.quantity || 0);
   }, 0);
 
   return (
-    <span onClick={toggleShowCart} className="cart-icon">
-      <ShoppingCart size={22} />
+    <button onClick={toggleShowCart} className="cart-icon">
+      <ShoppingCart size={22} weight="bold" />
       <div className="cart-counter">{totalCartQty || 0}</div>
-    </span>
+    </button>
   );
 }
 
-
-function Navigations({ toggleShowCart }) {
+function Navigations({ toggleShowCart, toggleSearch }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { user, logout } = useAuth();
 
@@ -51,9 +81,17 @@ function Navigations({ toggleShowCart }) {
 
   return (
     <nav className={`nav container ${isNavOpen ? "nav-open" : ""}`}>
-      <span className="brand-name">
-        <Link to="/">SOLUNA</Link>
-      </span>
+      <div className="nav-left">
+        <div className="nav-secondary_btn" onClick={handleOpenNavigation}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span className="brand-name">
+          <Link to="/">SOLUNA</Link>
+        </span>
+      </div>
+
       <ul className="nav-link_container">
         <li className="nav-link">
           <NavLink to="/">Home</NavLink>
@@ -70,35 +108,39 @@ function Navigations({ toggleShowCart }) {
           </li>
         )}
       </ul>
-      <div className="nav-secondary_btn" onClick={handleOpenNavigation}>
-        <span></span>
-        <span></span>
-        <span></span>
+
+      <div className="nav-right">
+        <button className="search-button" onClick={toggleSearch}>
+          <MagnifyingGlass size={22} weight="bold" />
+        </button>
+        
+        <div className="auth-container">
+          {user ? (
+            <>
+              <span className="user-email">{user.email}</span>
+              <span className="auth-divider">|</span>
+              <button onClick={logout} className="auth-link">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="auth-link">
+                Login
+              </Link>
+              <span className="auth-divider">|</span>
+              <Link to="/signup" className="auth-link">
+                SignUp
+              </Link>
+            </>
+          )}
+        </div>
+
+        <div className="nav-secondary">
+          <CartButton toggleShowCart={toggleShowCart} />
+        </div>
       </div>
-      <div className="auth-container">
-        {user ? (
-          <>
-            <span>{user.email}</span>
-            <span className="auth-divider">|</span>
-            <Link type="submit" onClick={logout} className="nav-link">
-              Logout
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="auth-link">
-              Login
-            </Link>
-            <span className="auth-divider">|</span>
-            <Link to="/signup" className="auth-link">
-              SignUp
-            </Link>
-          </>
-        )}
-      </div>
-      <div className="nav-secondary">
-        <CartButton toggleShowCart={toggleShowCart} />
-      </div>
+
       <div className="nav-overlay"></div>
     </nav>
   );
