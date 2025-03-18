@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { useCartActions } from '../store/store';
+import {useCartActions} from '../store/store';
 
 const AuthContext = createContext();
 

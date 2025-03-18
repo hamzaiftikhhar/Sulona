@@ -1,7 +1,7 @@
 // product/ProductView.jsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCartActions } from "../../store/Store";
+import { useCartActions } from "../../store/store";
 import "./ProductView.css";
 import toast from "react-hot-toast";
 
