@@ -1,8 +1,8 @@
 // Navbar/SlidingCart.jsx
 import { ShoppingCart, X } from "phosphor-react";
 import { Link } from "react-router-dom";
-import { useCartActions } from "../../store/Store";
-import { useCart } from "../../store/Store";
+import { useCartActions } from "../../store/store";
+import { useCart } from "../../store/store";
 import toast from "react-hot-toast";
 import "./SlidingCart.css";
 

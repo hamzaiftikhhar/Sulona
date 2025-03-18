@@ -1,6 +1,6 @@
 // UserInfo.jsx
 import React, { useState } from "react";
-import { useCartActions, useCart } from "../../store/Store";
+import { useCartActions, useCart } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "./UserInfo.css";

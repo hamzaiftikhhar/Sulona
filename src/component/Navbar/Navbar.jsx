@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCart } from "../../store/Store";
+import { useCart } from "../../store/store";
 import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart, MagnifyingGlass, X } from "phosphor-react";
 import SlidingCart from "./SlidingCart";

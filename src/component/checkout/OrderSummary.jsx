@@ -1,6 +1,6 @@
 // OrderSummary.jsx
 import React from "react";
-import { useCart } from "../../store/Store";
+import { useCart } from "../../store/store";
 import "./OrderSummary.css";
 
 function OrderSummary() {

@@ -1,7 +1,7 @@
 // explore/ProductCard.jsx
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useCartActions } from "../../store/Store";
+import { useCartActions } from "../../store/store";
 import "./ProductCard.css";
 
 function ProductCard({ product }) {
