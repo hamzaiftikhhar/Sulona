@@ -1,7 +1,7 @@
 # E-Commerce Application (MERN Stack)
 
 ## 🚀 Demo
-[**Live Demo**](https://soluna-k36fo8xha-hamzaiftikhhars-projects.vercel.app)
+[**Live Demo**](https://soluna-hamzaiftikhhars-projects.vercel.app/)
 
 ## Project Overview
 This is a full-stack e-commerce application built using the MERN stack (MongoDB, Express.js, React.js, and Node.js). The application allows users to browse products, manage their carts, and place orders. It also includes user authentication and an admin panel for managing products.
